@@ -1,13 +1,17 @@
 package br.upf.produto.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -23,8 +27,20 @@ public class Departament implements Serializable {
 	@Column(name="name", length = 100)
 	private String name;
 	
+	@Embedded
+	private Audit audit = new Audit();
+	
 	public Departament() {
-		
+	}
+	
+	@PrePersist
+	public void prePersit(){
+		audit.setDataRegister(Instant.now());
+	}
+	
+	@PreUpdate
+	public void preUpdate(){
+		audit.setDateLastEdition(Instant.now());
 	}
 
 	public Departament(String name) {
